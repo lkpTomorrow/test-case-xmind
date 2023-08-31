@@ -24,3 +24,9 @@ $btn-hover-color: #eee;
   justify-content: center;
   align-items: center;
 }
+
+@mixin flexleft {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}

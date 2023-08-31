@@ -18,6 +18,7 @@ export default {
   data() {
     return {
       items: [
+        { text: '-1' },
         { text: '0' },
         { text: '1' },
         { text: '2' },
@@ -59,6 +60,8 @@ export default {
     },
     title(index) {
       switch (index) {
+        case -1:
+          return '待执行';
         case 0:
           return '移除进度';
         case 1:
@@ -70,6 +73,8 @@ export default {
       }
     }
   },
-  created() {}
+  created() {
+
+  }
 }
 </script>

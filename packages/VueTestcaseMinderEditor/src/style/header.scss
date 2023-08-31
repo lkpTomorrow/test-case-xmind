@@ -250,8 +250,8 @@ header {
     }
   }
   .result-group{
-    width: 135px;
-    @include flexcenter;
+    width: 160px;
+    @include flexleft;
     button {
       border: none;
       background-color: rgba(0,0,0,0);

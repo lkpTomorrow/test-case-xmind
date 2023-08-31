@@ -1,0 +1,17 @@
+{
+  "name": "vue-testcase-minder-editor",
+  "description": "",
+  "main": "lib/VueTestcaseMinderEditor.umd.min.js",
+  "authors": [
+    "chenhengjie"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/BugMyGod/vue-testcase-minder-editor",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

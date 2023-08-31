@@ -21,17 +21,18 @@ export default {
   data() {
     return {
       items: [
+        { id: '-1' },
         { id: '0' },
         { id: '1' },
         { id: '2' },
         { id: '3' },
-        // { id: '4' },
-        // { id: '5' },
-        // { id: '6' },
-        // { id: '7' },
-        // { id: '8' },
-        // { id: '9' }
-      ],
+        { id: '4' },
+        { id: '5' },
+        { id: '6' },
+        { id: '7' },
+        { id: '8' },
+        { id: '9' }
+      ]
     }
   },
   computed: {
@@ -64,6 +65,8 @@ export default {
     //鼠标移上去显示
     title(index) {
       switch (index) {
+        case -1:
+          return '待执行';
         case 0:
           return '移除优先级';
         default:

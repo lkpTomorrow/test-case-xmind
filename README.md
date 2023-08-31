@@ -132,6 +132,7 @@ npm --registry=https://registry.npm.taobao.org install
 
 # 打包成组件并本地运行 examples 里面的示例
 npm run lib && npm run serve
+cnpm run lib && cnpm run serve
 
 # 打包成组件
 npm run lib

@@ -1,3 +1,28 @@
+## 0.3.15 (2023-08-31)
+
+
+### Bug Fixes
+
+* 0.3.13 发布时遗漏更新编译后文件，因此重新编译后发布 0.3.14 ([0dd9e6e](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/0dd9e6e108211064e8ad2da19a9f5376fedd3213))
+* 修复 vue-cli 2.x 项目导入时有 Unexpected token 的问题 ([808b1ab](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/808b1ab0e5f42169afd29851adaa35007436fe4b))
+* 修复由于 packages 目录中没有引入组件,导致报错找不到组件的问题 ([e0f2f55](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/e0f2f5544ed862eadd0195b0f3a3fba1bb19647d))
+* 修复部分项目引入后提示 Unknown browser query dead 的报错 ([d05b9cd](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/d05b9cd579211952cd7ef5f731b4f64118101184))
+* 修复默认数据缺少id值,导致搜索功能出错不可用的问题 ([affde62](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/affde62733eec810bf03775be5daa61153313c78))
+* 把 browserlist 配置调整到独立配置文件, 解决引入时出现 Unknown browser query dead 问题 ([dbae36c](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/dbae36c4a0fc2a90a9f1f99cfdef1d6263a83877))
+
+
+### Features
+
+* 增加问号图标 ([7642750](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/76427505fc9b4825f7f3cfdf13b04476f917f061))
+* 首次提交全部源码 ([d882a17](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/d882a17ae1936693e371ec3cb419a9d1c4e0ffaa))
+
+
+### Reverts
+
+* Revert "release: 发布 3.10 版本" ([c92e00d](https://github.com/BugMyGod/vue-testcase-minder-editor/commit/c92e00dcef40a34d6a78220aa0ef46400c999510))
+
+
+
 ## [0.3.14](https://github.com/chenhengjie123/vue-testcase-minder-editor/compare/v0.3.13...v0.3.14) (2022-06-05)
 
 

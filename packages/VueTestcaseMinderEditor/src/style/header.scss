@@ -230,7 +230,7 @@ header {
   }
   .sequence-group {
     li {
-      background-image: url("../static/caseMind/iconpriority.png");
+      background-image: url("../static/caseMind/iconpriority.jpg");
     }
     @for $i from 0 through 9 {
       .sequence-#{$i} {

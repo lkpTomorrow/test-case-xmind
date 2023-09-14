@@ -28,7 +28,7 @@ export default {
     name: 'mold',
     data() {
         return {
-            mold_index: 1,
+            mold_index: 4,
         }
     },
     computed: {
@@ -44,6 +44,11 @@ export default {
         templateList() {
             return kityminder.Minder.getTemplateList();
         }
+    },
+    mounted() {
+        setTimeout(() => {
+            this.handleCommand(3)
+        }, 50);
     },
     methods: {
         handleCommand(command) {

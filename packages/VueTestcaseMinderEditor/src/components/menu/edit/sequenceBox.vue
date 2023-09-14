@@ -22,7 +22,6 @@ export default {
     return {
       items: [
         { id: '-1' },
-        { id: '0' },
         { id: '1' },
         { id: '2' },
         { id: '3' },
@@ -31,7 +30,8 @@ export default {
         { id: '6' },
         { id: '7' },
         { id: '8' },
-        { id: '9' }
+        { id: '9' },
+        { id: '10' }
       ]
     }
   },
@@ -82,3 +82,12 @@ export default {
 
 }
 </script>
+<style scoped>
+.sequence-group {
+  width: 120px !important;
+}
+ul {
+  width: 120px !important;
+  padding-top: 4px !important;
+}
+</style>

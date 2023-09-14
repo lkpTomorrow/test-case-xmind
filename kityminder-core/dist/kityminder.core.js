@@ -6425,6 +6425,7 @@ _p[55] = {
 };
 
 //src/module/priority.js
+// 优先级
 _p[56] = {
     value: function(require, exports, module) {
         var kity = _p.r(17);
@@ -6448,10 +6449,16 @@ _p[56] = {
             //     ['#A3A3A3', '#515151'],
             //     ['#A3A3A3', '#515151'],
             // ]; // hue from 1 to 5
-            var PRIORITY_COLORS = [ null, [ "#F85633", "#F85633" ], // 1 - red
-            [ "#3e7bbf", "#3e7bbf" ], // 2 - blue
-            [ "#2DBAAD", "#2DBAAD" ], // 3 - green
-            [ "#DD832C", "#DD832C" ] ];
+            var PRIORITY_COLORS = [ null, ['#FF1200', '#840023'], // 1 - red
+            ['#0074FF', '#01467F'], // 2 - blue
+            ['#00AF00', '#006300'], // 3 - green
+            ['#FF962E', '#B25000'],
+            ['#A464FF', '#4720C4'],
+            ['#A3A3A3', '#515151'],
+            ['#A3A3A3', '#515151'],
+            ['#A3A3A3', '#515151'],
+            ['#A3A3A3', '#515151'],
+         ];
             // hue from 1 to 5
             // jscs:disable maximumLineLength
             var BACK_PATH = "M0,13c0,3.866,3.134,7,7,7h6c3.866,0,7-3.134,7-7V7H0V13z";
@@ -6488,7 +6495,7 @@ _p[56] = {
                         back.fill(color[1]);
                         mask.fill(color[0]);
                     }
-                    number.setContent("P" + (value - 1));
+                    number.setContent("P" + (value));
                 }
             });
             /**

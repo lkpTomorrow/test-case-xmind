@@ -44,7 +44,6 @@ define(function (require, exports, module) {
     // });
 
     "0,9,1,5,4,-1".split(',').map(p => {
-      console.log('mx----p--', p, Number(p))
       main.button({
         position: "buttom",
         label: resultButtonMapper[p].label,

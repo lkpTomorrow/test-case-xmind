@@ -1,4 +1,4 @@
-# VUE-TESTCASE-MINDER-EDITOR
+# vue-testcase-minder-editor-custom-custom
 
 基于百度脑图，并使用Vue二次开发的用例脑图编辑器组件。
 
@@ -14,7 +14,7 @@
 
 ## 效果
 
-![脑图](https://github.com/chenhengjie123/vue-testcase-minder-editor/blob/master/docs/preview.png)
+![脑图](https://github.com/BugMyGod/vue-testcase-minder-editor/blob/master/docs/preview.png)
 
 也可以本地跑起来体验，克隆完代码后，在根目录下：
 
@@ -40,14 +40,14 @@ npm run lib && npm run serve
 安装本组件
 
 ``` bash
-npm --registry=https://registry.npm.taobao.org install vue-testcase-minder-editor
+npm --registry=https://registry.npm.taobao.org install vue-testcase-minder-editor-custom
 ```
 
 在 main.js 中
 
 ``` javascript
-import 'vue-testcase-minder-editor/lib/VueTestcaseMinderEditor.css'
-import VueTestcaseMinderEditor from 'vue-testcase-minder-editor'
+import 'vue-testcase-minder-editor-custom/lib/VueTestcaseMinderEditor.css'
+import VueTestcaseMinderEditor from 'vue-testcase-minder-editor-custom'
 
 Vue.use(VueTestcaseMinderEditor)
 ```

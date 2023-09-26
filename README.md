@@ -16,6 +16,9 @@
 
 ![脑图](https://github.com/BugMyGod/vue-testcase-minder-editor/blob/master/docs/preview.png)
 
+## github
+![github](https://github.com/BugMyGod/vue-testcase-minder-editor)
+
 也可以本地跑起来体验，克隆完代码后，在根目录下：
 
 ```

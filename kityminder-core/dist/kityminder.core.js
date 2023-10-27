@@ -3890,6 +3890,9 @@ _p[35] = {
         _p.r(73);
         _p.r(72);
         _p.r(75);
+        _p.r(82);
+        _p.r(83);
+        _p.r(84);
         module.exports = kityminder;
     }
 };
@@ -7101,7 +7104,7 @@ _p[59] = {
      * @state
      *    0: 当前有选中的节点
      *   -1: 当前没有选中的节点
-     */
+     */     
             var ResultCommand = kity.createClass("ResultCommand", {
                 base: Command,
                 execute: function(km, value) {
@@ -9549,6 +9552,563 @@ _p[81] = {
     }
 };
 
+
+//src/module/notePds.js
+/**
+ * @fileOverview
+ *
+ * 支持节点详细信息（HTML）格式
+ *
+ * @author: techird
+ * @copyright: Baidu FEX, 2014
+ */
+_p[82] = {
+    value: function(require, exports, module) {
+        var kity = _p.r(17);
+        var utils = _p.r(33);
+        var Minder = _p.r(19);
+        var MinderNode = _p.r(21);
+        var Command = _p.r(9);
+        var Module = _p.r(20);
+        var Renderer = _p.r(27);
+        Module.register("NotePdsModule", function() {
+            var NOTEPDS_PATH = "M9,9H3V8h6L9,9L9,9z M9,7H3V6h6V7z M9,5H3V4h6V5z M8.5,11H2V2h8v7.5 M9,12l2-2V1H1v11";
+            /**
+         * @command notePds
+         * @description 设置节点的备注信息
+         * @param {string} notePds 要设置的备注信息，设置为 null 则移除备注信息
+         * @state
+         *    0: 当前有选中的节点
+         *   -1: 当前没有选中的节点
+         */
+            var NotePdsCommand = kity.createClass("NotePdsCommand", {
+                base: Command,
+                execute: function(minder, note) {
+                    var node = minder.getSelectedNode();
+                    node.setData("notePds", note);
+                    node.render();
+                    node.getMinder().layout(300);
+                },
+                queryState: function(minder) {
+                    return minder.getSelectedNodes().length === 1 ? 0 : -1;
+                },
+                queryValue: function(minder) {
+                    var node = minder.getSelectedNode();
+                    return node && node.getData("notePds");
+                }   
+            });
+            var notePdsIcon = kity.createClass("notePdsIcon", {
+                base: kity.Group,
+                constructor: function() {
+                    this.callBase();
+                    this.width = 18;
+                    this.height = 17;
+                    this.rect = new kity.Rect(16, 17, 0.9, -8.5, 2).fill("transparent");
+                    this.path = new kity.Path().setPathData(NOTEPDS_PATH).setTranslate(2.5, -6.5);
+                    this.addShapes([ this.rect, this.path ]);
+                    this.on("mouseover", function() {
+                        this.rect.fill("rgba(255, 255, 200, .8)");
+                    }).on("mouseout", function() {
+                        this.rect.fill("transparent");
+                    });
+                    this.setStyle("cursor", "pointer");
+                }
+            });
+            var notePdsIconRenderer = kity.createClass("notePdsIconRenderer", {
+                base: Renderer,
+                create: function(node) {
+                    var icon = new notePdsIcon();
+                    icon.on("mousedown", function(e) {
+                        e.preventDefault();
+                        node.getMinder().fire("editnotePdsrequest");
+                    });
+                    icon.on("mouseover", function() {
+                        node.getMinder().fire("shownotePdsrequest", {
+                            node: node,
+                            icon: icon
+                        });
+                    });
+                    icon.on("mouseout", function() {
+                        node.getMinder().fire("hidenotePdsrequest", {
+                            node: node,
+                            icon: icon
+                        });
+                    });
+                    return icon;
+                },
+                shouldRender: function(node) {
+                    return node.getData("notePds");
+                },
+                update: function(icon, node, box) {
+                    var x = box.right + node.getStyle("space-left");
+                    var y = box.cy;
+                    icon.path.fill(node.getStyle("color"));
+                    icon.setTranslate(x, y);
+                    return new kity.Box(x, Math.round(y - icon.height / 2), icon.width, icon.height);
+                }
+            });
+            return {
+                renderers: {
+                    right: notePdsIconRenderer
+                },
+                commands: {
+                    notePds: NotePdsCommand
+                }
+            };
+        });
+    }
+};
+
+//src/module/textPds.js
+_p[83] = {
+    value: function(require, exports, module) {
+        var kity = _p.r(17);
+        var utils = _p.r(33);
+        var Minder = _p.r(19);
+        var MinderNode = _p.r(21);
+        var Command = _p.r(9);
+        var Module = _p.r(20);
+        var Renderer = _p.r(27);
+        /**
+     * 
+     * 自定义text
+     */
+        Module.register('NotePdsModule', function() {
+
+            var FONT_ADJUST = {
+                'safari': {
+                    '微软雅黑,Microsoft YaHei': -0.17,
+                    '楷体,楷体_GB2312,SimKai': -0.1,
+                    '隶书, SimLi': -0.1,
+                    'comic sans ms': -0.23,
+                    'impact,chicago': -0.15,
+                    'times new roman': -0.1,
+                    'arial black,avant garde': -0.17,
+                    'default': 0,
+                    'line-height':2
+                },
+                'ie': {
+                    10: {
+                        '微软雅黑,Microsoft YaHei': -0.17,
+                        'comic sans ms': -0.17,
+                        'impact,chicago': -0.08,
+                        'times new roman': 0.04,
+                        'arial black,avant garde': -0.17,
+                        'default': -0.15,
+                        'line-height':2
+                    },
+                    11: {
+                        '微软雅黑,Microsoft YaHei': -0.17,
+                        'arial,helvetica,sans-serif': -0.17,
+                        'comic sans ms': -0.17,
+                        'impact,chicago': -0.08,
+                        'times new roman': 0.04,
+                        'sans-serif': -0.16,
+                        'arial black,avant garde': -0.17,
+                        'default': -0.15,
+                        'line-height':2
+                    }
+                },
+                'edge': {
+                    '微软雅黑,Microsoft YaHei': -0.15,
+                    'arial,helvetica,sans-serif': -0.17,
+                    'comic sans ms': -0.17,
+                    'impact,chicago': -0.08,
+                    'sans-serif': -0.16,
+                    'arial black,avant garde': -0.17,
+                    'default': -0.15,
+                    'line-height':2
+                },
+                'sg': {
+                    '微软雅黑,Microsoft YaHei': -0.15,
+                    'arial,helvetica,sans-serif': -0.05,
+                    'comic sans ms': -0.22,
+                    'impact,chicago': -0.16,
+                    'times new roman': -0.03,
+                    'arial black,avant garde': -0.22,
+                    'default': -0.15,
+                    'line-height':2
+                },
+                'chrome': {
+                    'Mac': {
+                        'andale mono': -0.05,
+                        'comic sans ms': -0.3,
+                        'impact,chicago': -0.13,
+                        'times new roman': -0.1,
+                        'arial black,avant garde': -0.17,
+                        'default': 0,
+                        'line-height':2
+                    },
+                    'Win': {
+                        '微软雅黑,Microsoft YaHei': -0.15,
+                        'arial,helvetica,sans-serif': -0.02,
+                        'arial black,avant garde': -0.2,
+                        'comic sans ms': -0.2,
+                        'impact,chicago': -0.12,
+                        'times new roman': -0.02,
+                        'default': -0.15,
+                        'line-height':2
+                    },
+                    'Lux': {
+                        'andale mono': -0.05,
+                        'comic sans ms': -0.3,
+                        'impact,chicago': -0.13,
+                        'times new roman': -0.1,
+                        'arial black,avant garde': -0.17,
+                        'default': 0,
+                        'line-height':2
+                    }
+                },
+                'firefox': {
+                    'Mac': {
+                        '微软雅黑,Microsoft YaHei': -0.2,
+                        '宋体,SimSun': 0.05,
+                        'comic sans ms': -0.2,
+                        'impact,chicago': -0.15,
+                        'arial black,avant garde': -0.17,
+                        'times new roman': -0.1,
+                        'default': 0.05,
+                        'line-height':2
+                    },
+                    'Win': {
+                        '微软雅黑,Microsoft YaHei': -0.16,
+                        'andale mono': -0.17,
+                        'arial,helvetica,sans-serif': -0.17,
+                        'comic sans ms': -0.22,
+                        'impact,chicago': -0.23,
+                        'times new roman': -0.22,
+                        'sans-serif': -0.22,
+                        'arial black,avant garde': -0.17,
+                        'default': -0.16,
+                        'line-height':2
+                    },
+                    'Lux': {
+                        "宋体,SimSun": -0.2,
+                        "微软雅黑,Microsoft YaHei": -0.2,
+                        "黑体, SimHei": -0.2,
+                        "隶书, SimLi": -0.2,
+                        "楷体,楷体_GB2312,SimKai": -0.2,
+                        "andale mono": -0.2,
+                        "arial,helvetica,sans-serif": -0.2,
+                        "comic sans ms": -0.2,
+                        "impact,chicago": -0.2,
+                        "times new roman": -0.2,
+                        "sans-serif": -0.2,
+                        "arial black,avant garde": -0.2,
+                        "default": -0.16,
+                        'line-height':2
+                    }
+                },
+            };
+        
+            /**
+             * @command notePds
+             * @description 设置节点的备注信息
+             * @param {string} notePds 要设置的备注信息，设置为 null 则移除备注信息
+             * @state
+             *    0: 当前有选中的节点
+             *   -1: 当前没有选中的节点
+             */
+            var TextPdsCommand = kity.createClass('TextPdsCommand', {
+                base: Command,
+    
+               
+            execute: function(minder, note) {
+                var node = minder.getSelectedNode();
+                node.setData('textPds', note);
+                node.render();
+                minder.layout();
+            },
+
+            queryState: function(minder) {
+                return minder.getSelectedNodes().length === 1 ? 0 : -1;
+            },
+
+            queryValue: function(minder) {
+                var node = minder.getSelectedNode();
+                return node && node.getData('textPds');
+            }
+            });
+    
+            var textPdsIconRenderer = kity.createClass('textPdsIconRenderer', {
+                base: Renderer,
+                create: function() {
+                    return new kity.Group().setId(utils.uuid('node_textdps'));
+                },
+        
+                update: function(textGroup, node,box) {
+                    function getDataOrStyle(name) {
+                        return node.getData(name) || node.getStyle(name);
+                    }
+        
+                    var nodeText = node.getData('textPds');
+                    var textArr = nodeText ? nodeText.split('\n') : [' '];
+                    var lineHeight = node.getStyle('line-height');
+                    var fontSize = getDataOrStyle('font-size');
+                    var fontFamily = getDataOrStyle('font-family') || 'default';
+                    var boxHeight=box.height || 0
+                    var height = (lineHeight * fontSize) * textArr.length - (lineHeight - 1) * fontSize;
+                    var yStart = (nodeText&&(-height / 2))<0?(boxHeight==20?10:boxHeight/2):-height / 2;
+                    var Browser = kity.Browser;
+                    var adjust;
+        
+                    if (Browser.chrome || Browser.opera || Browser.bd ||Browser.lb === "chrome") {
+                        adjust = FONT_ADJUST['chrome'][Browser.platform][fontFamily];
+                    } else if (Browser.gecko) {
+                        adjust = FONT_ADJUST['firefox'][Browser.platform][fontFamily];
+                    } else if (Browser.sg) {
+                        adjust = FONT_ADJUST['sg'][fontFamily];
+                    } else if (Browser.safari) {
+                        adjust = FONT_ADJUST['safari'][fontFamily];
+                    } else if (Browser.ie) {
+                        adjust = FONT_ADJUST['ie'][Browser.version][fontFamily];
+                    } else if (Browser.edge) {
+                        adjust = FONT_ADJUST['edge'][fontFamily];
+                    } else if (Browser.lb) {
+                        // 猎豹浏览器的ie内核兼容性模式下
+                        adjust = 0.9;
+                    }
+        
+                    textGroup.setTranslate(0, (adjust || 0) * fontSize);
+        
+                    var rBox = new kity.Box(),
+                        r = Math.round;
+        
+        
+                    var textLength = textArr.length;
+        
+                    var textGroupLength = textGroup.getItems().length;
+        
+                    var i, ci, textShape, text;
+        
+                    if (textLength < textGroupLength) {
+                        for (i = textLength, ci; ci = textGroup.getItem(i);) {
+                            textGroup.removeItem(i);
+                        }
+                    } else if (textLength > textGroupLength) {
+                        var growth = textLength - textGroupLength;
+                        while (growth--) {
+                            textShape = new kity.Text()
+                                .setAttr('text-rendering', 'inherit');
+                            if (kity.Browser.ie || kity.Browser.edge) {
+                                textShape.setVerticalAlign('top');
+                            } else {
+                                textShape.setAttr('dominant-baseline', 'text-before-edge');
+                            }
+                            textShape.fill('red')
+                            textGroup.addItem(textShape);
+                        }
+                    }
+        
+                    for (i = 0, text, textShape;
+                        (text = textArr[i], textShape = textGroup.getItem(i)); i++) {
+                        textShape.setContent(text);
+                        if (kity.Browser.ie || kity.Browser.edge) {
+                            textShape.fixPosition();
+                        }
+                    }
+        
+        
+                    var textHash = 
+                        ['font-size', 'font-name', 'font-weight', 'font-style'].map(getDataOrStyle).join('/');
+        
+                    if (node._currentTextHash == textHash && node._currentTextGroupBox) return node._currentTextGroupBox;
+                    node._currentTextHash = textHash;
+        
+                    return function() {
+                        textGroup.eachItem(function(i, textShape) {
+                            var y = yStart + i * fontSize * lineHeight;
+                            textShape.setY(y);
+                            var bbox = textShape.getBoundaryBox();
+                            rBox = rBox.merge(new kity.Box(0, y, bbox.height && bbox.width || 1, fontSize));
+                        });
+                        var nBox = new kity.Box(r(rBox.x), r(rBox.y), r(rBox.width), r(rBox.height));
+                        node._currentTextGroupBox = nBox;
+                        return nBox;
+                    };
+        
+                },
+        
+            });
+
+            return {
+                renderers: {
+                    left: textPdsIconRenderer
+                },
+                commands: {
+                    'textspan': TextPdsCommand
+                }
+            };
+        });
+    }
+};
+
+//src/module/flag.js
+_p[84] = {
+    value: function(require, exports, module) {
+        var kity = _p.r(17);
+        var utils = _p.r(33);
+        var Minder = _p.r(19);
+        var MinderNode = _p.r(21);
+        var Command = _p.r(9);
+        var Module = _p.r(20);
+        var Renderer = _p.r(27);
+        Module.register('flagModule', function () {
+            var minder = this
+            // FIXME: 超级大坑，滴滴AgileTC用了 flagCommand 记录测试结果，为了兼容这里只能继续用。
+            var flag_DATA = 'flagCommand'
+            var DEFAULT_BACKGROUND = '#43BC00'
+            var flagRed = 1
+            var flagOrange = 2
+            var flagYellow = 3
+            var flagBlue = 4
+            var flagGreen = 5
+            var flagPurple = 6
+            var flagGray = 7
+            var flag = 0
+            var FRAME_GRAD = new kity.LinearGradient().pipe(function(g) {
+                g.setStartPosition(0, 0);
+                g.setEndPosition(0, 1);
+                g.addStop(0, '#fff');
+                g.addStop(1, '#ccc');
+            });
+            //
+            // minder.getPaper().addResource(FRAME_GRAD);
+            // 进度图标的图形
+            var flagCommandicon = kity.createClass('flagCommandicon', {
+              base: kity.Group,
+              constructor: function (value) {
+                this.callBase()
+                this.setSize(20)
+                this.create()
+                this.setValue(value)
+                this.setId(utils.uuid('node_flagCommand'))
+                this.translate(0.5, 0.5)
+              },
+              setSize: function (size) {
+                this.width = this.height = size
+              },
+              create: function () {
+                // translate(-5px,-6px) scale(0.013)
+                var default_circle = new kity.Circle(9).fill("rgba(255,0,0,0)")
+                default_pie = new kity.Pie(9, 0).fill(DEFAULT_BACKGROUND)
+                Red = new kity.Path().setTranslate( - 5, - 8).setScale(.015).setPathData("M256 0a42.666667 42.666667 0 0 1 21.354667 79.616L277.333333 981.333333h42.666667a21.333333 21.333333 0 0 1 0 42.666667H192a21.333333 21.333333 0 0 1 0-42.666667h42.666667V79.616A42.666667 42.666667 0 0 1 256 0z m357.674667 206.570667c125.781333 171.989333 230.186667 188.288 292.906666 165.76l2.389334-0.896-0.213334 0.149333c-9.536 7.146667-113.429333 134.592-278.72 134.592-114.005333 0-225.344 55.402667-334.08 166.186667V89.173333c126.677333-38.122667 232.576 1.002667 317.717334 117.418667z").fill("rgba(255,0,0)")
+                Orange = new kity.Path().setTranslate( - 5, - 8).setScale(.015).setPathData("M256 0a42.666667 42.666667 0 0 1 21.354667 79.616L277.333333 981.333333h42.666667a21.333333 21.333333 0 0 1 0 42.666667H192a21.333333 21.333333 0 0 1 0-42.666667h42.666667V79.616A42.666667 42.666667 0 0 1 256 0z m357.674667 206.570667c125.781333 171.989333 230.186667 188.288 292.906666 165.76l2.389334-0.896-0.213334 0.149333c-9.536 7.146667-113.429333 134.592-278.72 134.592-114.005333 0-225.344 55.402667-334.08 166.186667V89.173333c126.677333-38.122667 232.576 1.002667 317.717334 117.418667z").fill("rgba(238,177,116)")
+                Yellow = new kity.Path().setTranslate( - 5, - 8).setScale(.015).setPathData("M256 0a42.666667 42.666667 0 0 1 21.354667 79.616L277.333333 981.333333h42.666667a21.333333 21.333333 0 0 1 0 42.666667H192a21.333333 21.333333 0 0 1 0-42.666667h42.666667V79.616A42.666667 42.666667 0 0 1 256 0z m357.674667 206.570667c125.781333 171.989333 230.186667 188.288 292.906666 165.76l2.389334-0.896-0.213334 0.149333c-9.536 7.146667-113.429333 134.592-278.72 134.592-114.005333 0-225.344 55.402667-334.08 166.186667V89.173333c126.677333-38.122667 232.576 1.002667 317.717334 117.418667z").fill("rgba(244,234,42)")
+                Blue = new kity.Path().setTranslate( - 5, - 8).setScale(.015).setPathData("M256 0a42.666667 42.666667 0 0 1 21.354667 79.616L277.333333 981.333333h42.666667a21.333333 21.333333 0 0 1 0 42.666667H192a21.333333 21.333333 0 0 1 0-42.666667h42.666667V79.616A42.666667 42.666667 0 0 1 256 0z m357.674667 206.570667c125.781333 171.989333 230.186667 188.288 292.906666 165.76l2.389334-0.896-0.213334 0.149333c-9.536 7.146667-113.429333 134.592-278.72 134.592-114.005333 0-225.344 55.402667-334.08 166.186667V89.173333c126.677333-38.122667 232.576 1.002667 317.717334 117.418667z").fill("rgba(18,150,219)")
+                Green = new kity.Path().setTranslate( - 5, - 8).setScale(.015).setPathData("M256 0a42.666667 42.666667 0 0 1 21.354667 79.616L277.333333 981.333333h42.666667a21.333333 21.333333 0 0 1 0 42.666667H192a21.333333 21.333333 0 0 1 0-42.666667h42.666667V79.616A42.666667 42.666667 0 0 1 256 0z m357.674667 206.570667c125.781333 171.989333 230.186667 188.288 292.906666 165.76l2.389334-0.896-0.213334 0.149333c-9.536 7.146667-113.429333 134.592-278.72 134.592-114.005333 0-225.344 55.402667-334.08 166.186667V89.173333c126.677333-38.122667 232.576 1.002667 317.717334 117.418667z").fill("rgba(50,205,50)")
+                Purple = new kity.Path().setTranslate( - 5, - 8).setScale(.015).setPathData("M256 0a42.666667 42.666667 0 0 1 21.354667 79.616L277.333333 981.333333h42.666667a21.333333 21.333333 0 0 1 0 42.666667H192a21.333333 21.333333 0 0 1 0-42.666667h42.666667V79.616A42.666667 42.666667 0 0 1 256 0z m357.674667 206.570667c125.781333 171.989333 230.186667 188.288 292.906666 165.76l2.389334-0.896-0.213334 0.149333c-9.536 7.146667-113.429333 134.592-278.72 134.592-114.005333 0-225.344 55.402667-334.08 166.186667V89.173333c126.677333-38.122667 232.576 1.002667 317.717334 117.418667z").fill("rgba(139,0,255)")
+                Gray = new kity.Path().setTranslate( - 5, - 6).setScale(.013).setPathData("M256 0a42.666667 42.666667 0 0 1 21.354667 79.616L277.333333 981.333333h42.666667a21.333333 21.333333 0 0 1 0 42.666667H192a21.333333 21.333333 0 0 1 0-42.666667h42.666667V79.616A42.666667 42.666667 0 0 1 256 0z m357.674667 206.570667c125.781333 171.989333 230.186667 188.288 292.906666 165.76l2.389334-0.896-0.213334 0.149333c-9.536 7.146667-113.429333 134.592-278.72 134.592-114.005333 0-225.344 55.402667-334.08 166.186667V89.173333c126.677333-38.122667 232.576 1.002667 317.717334 117.418667z").fill("rgba(81,81,81)")
+                this.addShapes([Red, Orange, Yellow, Blue, Green, Purple, Gray])
+                this.pie = default_pie
+                this.Red = Red
+                this.Orange = Orange
+                this.Yellow = Yellow
+                this.Blue = Blue
+                this.Green = Green
+                this.Purple = Purple
+                this.Gray = Gray
+                },
+              setValue: function (value) {
+                // SKIP_VALUE !== value ? this.pie.setAngle( - 360 * (value - 1) / 8).fill(DEFAULT_BACKGROUND) : this.pie.setAngle(360).fill("#fff")
+                this.Red.setVisible(flagRed == value)
+                this.Orange.setVisible(flagOrange == value)
+                this.Yellow.setVisible(flagYellow == value)
+                this.Blue.setVisible(flagBlue == value)
+                this.Green.setVisible(flagGreen == value)
+                this.Purple.setVisible(flagPurple == value)
+                this.Gray.setVisible(flagGray == value)
+                // BLOCK_VALUE == value && this.block.setAngle( - 180)
+              }
+            })
+            /**
+             * @command flag
+             * @description 设置节点的结果信息（添加一个结果小图标）
+             * @param {number} value 要设置的进度
+             *     取值为 0 移除结果信息；
+             *     取值为 1 表示成功；
+             *     取值为 2 表示失败；
+             *     取值为 3 表示忽略；
+             * @state
+             *    0: 当前有选中的节点
+             *   -1: 当前没有选中的节点
+             */
+            var flagCommand = kity.createClass('flagCommand', {
+              base: Command,
+              execute: function (km, value) {
+                var nodes = km.getSelectedNodes()
+                // if (value > 0 && nodes.length === 1 && !nodes[0].isLeaf()) {
+                //   ilayer.alert('父节点不允许标记测试结果。', {
+                //     skin: 'layui-layer-molv',
+                //     closeBtn: 0
+                //   })
+                //   return
+                // }
+                var msg_flag = false
+                for (var i = 0; i < nodes.length; i++) {
+                  if (value == 0) {
+                    nodes[i].removeKey(flag_DATA).render()
+                  } else {
+                    nodes[i].setData(flag_DATA, value || null).render()
+                    // if (nodes[i].isLeaf()) {
+        
+                    // } else {
+                    //   msg_flag = true
+                    // }
+                  }
+                }
+                // if (msg_flag) {
+                //   ilayer.alert('父节点不允许标记测试结果。', {
+                //     skin: 'layui-layer-molv',
+                //     closeBtn: 0
+                //   })
+                // }
+                km.layout()
+              },
+              queryValue: function (km) {
+                var nodes = km.getSelectedNodes()
+                var val
+                for (var i = 0; i < nodes.length; i++) {
+                  val = nodes[i].getData(flag_DATA)
+                  if (val) break
+                }
+                return val || null
+              },
+              queryState: function (km) {
+                return km.getSelectedNodes().length ? 0 : -1;
+              }
+            })
+            return {
+              commands: {
+                flagicon: flagCommand
+              },
+              renderers: {
+                left: kity.createClass('flagRenderer', {
+                  base: Renderer,
+                  create: function (node) {
+                    return new flagCommandicon()
+                  },
+                  shouldRender: function (node) {
+                    // return node.getData(flag_DATA);
+                    return node.getData(flag_DATA) && !node.getData('hideState')
+                  },
+                  update: function (icon, node, box) {
+                    var data = node.getData(flag_DATA)
+                    var spaceLeft = node.getStyle('space-left')
+                    var x, y
+                    icon.setValue(data)
+                    x = box.left - icon.width - spaceLeft
+                    y = -icon.height / 2
+                    icon.setTranslate(x + icon.width / 2, y + icon.height / 2)
+                    return new kity.Box(x, y, icon.width, icon.height)
+                  }
+                })
+              }
+            }
+          })
+    }
+};
+    
 var moduleMapping = {
     "expose-kityminder": 34
 };

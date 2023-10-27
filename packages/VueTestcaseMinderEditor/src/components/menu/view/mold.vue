@@ -48,7 +48,7 @@ export default {
     mounted() {
         setTimeout(() => {
             this.handleCommand(3)
-        }, 50);
+        }, 0);
     },
     methods: {
         handleCommand(command) {

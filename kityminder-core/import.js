@@ -85,7 +85,12 @@
         'src/module/hyperlink.js',
         'src/module/arrange.js',
         'src/module/clipboard.js',
-        'src/module/style.js'
+        'src/module/style.js',
+        //新增批注
+        'src/module/notePds.js',
+        'src/module/textPds.js',
+        // 插入旗子
+        'src/module/flag.js'
     ];
 
     if (typeof(module) === 'object' && module.exports) {

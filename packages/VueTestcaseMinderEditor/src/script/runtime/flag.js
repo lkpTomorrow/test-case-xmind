@@ -1,4 +1,5 @@
 define(function (require, exports, module) {
+
   function ResultRuntime() {
     var minder = this.minder;
     var hotbox = this.hotbox;

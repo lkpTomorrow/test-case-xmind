@@ -8,11 +8,13 @@
       <el-dropdown-menu slot="dropdown" class="selection-dropdown-list">
         <el-dropdown-item command="add">插入备注</el-dropdown-item>
         <el-dropdown-item command="remove">移除已有备注</el-dropdown-item>
+        <el-dropdown-item command="addPizhu">插入标注</el-dropdown-item>
+        <el-dropdown-item command="removePizhu">移除已有的标注</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
 
 
-    <el-dialog title="备 注" :visible.sync="noteShow" width="50%">
+    <el-dialog :title="editType" :visible.sync="noteShow" width="50%">
 
       <el-input
         v-model="note"
@@ -45,6 +47,7 @@
       return {
         noteShow: false,
         note: '',
+        editType:''
       }
     },
     computed: {
@@ -62,21 +65,47 @@
           case 'remove':
             this.removeNote();
             break;
+          case 'addPizhu':
+            this.addPizhu();
+            break;
+          case 'removePizhu':
+            this.removeNote11();
+            break;
           default:
             break;
         }
       },
       addNote(){
         this.noteShow = true;
+        this.editType='备注'
         this.note = this.minder.queryCommandValue('note');
       },
       removeNote() {
         this.minder.execCommand('note', null);
       },
+      removeNote11(){
+       this.minder.execCommand('textspan', null);
+      },
+      //新增批注
+      addPizhu(){
+        this.noteShow = true;
+        this.note = this.minder.queryCommandValue('textspan');
+        this.editType=this.note ?'编辑批注 ':'批注'
+      },
+      //移除批注
       handleSubmit() {
+        console.log(this.editType,'fffffffffff')
+        if(this.editType!=='备注'){
+          console.log('------------nf')
+        this.minder.execCommand('textspan', this.note);
+        this.note = '';
+        this.noteShow = false;
+        }else{
         this.minder.execCommand('note', this.note);
         this.note = '';
         this.noteShow = false;
+        }
+
 
       },
       handleCancel() {

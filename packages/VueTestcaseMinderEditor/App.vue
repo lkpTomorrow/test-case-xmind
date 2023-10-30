@@ -33,10 +33,10 @@ export default {
           },
           children: [
             { data: { text: '新闻', id: '1', resource: ['自定义标签'] } },
-            { data: { text: '网页', id: '2', priority: 1 } },
+            { data: { text: '网页', id: '2', priority: 1,textPds:"textPdstextPds" } },
             { data: { text: '贴吧', id: '3', priority: 2 } },
             { data: { text: '知道', id: '4', priority: 2 } },
-            { data: { text: '音乐', id: '5', priority: 3 } },
+            { data: { text: '音乐', id: '5', priority: 3 ,flagCommand: '1'} }, 
             { data: { text: '图片', id: '6', priority: 3 } },
             { data: { text: '视频', id: '7', priority: 3 } },
             { data: { text: '地图', id: '8', priority: 3 } },
@@ -45,12 +45,12 @@ export default {
           ]
         }
       },
-      editMode: false
+      editMode: true
     }
   },
   computed: {
     buttonText: function() {
-      return this.editMode === false ? '进入编辑模式，允许修改脑图内容及登记结果' : '退出编辑模式'
+      return this.editMode === false ? '进入编辑模式，允许修改脑图内容及登记结果1dd' : '退出编辑模式'
     }
   },
   methods: {

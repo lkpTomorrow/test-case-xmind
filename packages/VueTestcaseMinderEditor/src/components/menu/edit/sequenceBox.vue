@@ -70,7 +70,7 @@ export default {
         case 0:
           return '移除优先级';
         default:
-          return '优先级P' + (index-1);
+          return '优先级P' + (index);
       }
     }
 
@@ -84,10 +84,10 @@ export default {
 </script>
 <style scoped>
 .sequence-group {
-  width: 120px !important;
+  width: 142px !important;
 }
 ul {
-  width: 120px !important;
+  width: 142px !important;
   padding-top: 4px !important;
 }
 </style>

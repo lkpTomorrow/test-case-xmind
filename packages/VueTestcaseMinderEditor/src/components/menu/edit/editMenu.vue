@@ -14,9 +14,11 @@
   <search></search>
   <node-box v-if="allowEditNode"></node-box>
   <sequence-box v-if="allowEditPriority"></sequence-box>
+  <!-- 新增旗子 -->
+  <flag-icon v-if="allowEditPriority"></flag-icon>
   <!-- <progress-box></progress-box> -->
   <!--  自定义标签-->
-  <resource-edit v-if="allowEditLabel"></resource-edit>
+  <!-- <resource-edit v-if="allowEditLabel"></resource-edit> -->
   <!--测试结果登记-->
   <result-box v-if="allowEditResult"></result-box>
 
@@ -27,8 +29,9 @@
 import insertBox from './insertBox'
 import moveBox from './moveBox'
 import editDel from './editDel'
+import flagIcon from './flagIcon'
 import sequenceBox from './sequenceBox'
-import progressBox from './progressBox'
+// import progressBox from './progressBox'
 import expand from './expand'
 import selection from './selection'
 import NodeBox from "./noteBox";
@@ -50,6 +53,7 @@ export default {
     insertBox,
     moveBox,
     editDel,
+    flagIcon,
     sequenceBox,
     // progressBox,
     expand,

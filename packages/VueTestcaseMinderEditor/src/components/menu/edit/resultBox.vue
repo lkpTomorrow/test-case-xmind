@@ -47,7 +47,6 @@ export default {
   },
   methods: {
     execCommand (index) {
-      console.log('mx----index--', index)
       // 兼容原来滴滴旧的登记方式，需要调整每个按钮对应的 command 里的值
       var indexTocommandValueMap = {
         0: 0, // 去掉结果

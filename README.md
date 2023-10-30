@@ -1,4 +1,4 @@
-# vue-testcase-minder-editor-custom-custom
+# vue-testcase-minder-editor-custom-mine
 
 基于百度脑图，并使用Vue二次开发的用例脑图编辑器组件。
 
